@@ -1,0 +1,7 @@
+<resources>
+    <!--
+        Dark theme uses the same Theme.MaintenanceLog style from values/themes.xml.
+        The dark Material 3 palette is provided by values-night/colors.xml, so the
+        color roles do not need to be redefined here.
+    -->
+</resources>
