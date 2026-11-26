@@ -14,6 +14,7 @@ import com.example.maintenancelog.databinding.FragmentLogDetailBinding
 import com.example.maintenancelog.ui.LogDetailUiState
 import com.example.maintenancelog.ui.LogDetailViewModel
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.DateFormat
@@ -49,6 +50,8 @@ class LogDetailFragment : Fragment(R.layout.fragment_log_detail) {
         binding.dateEditText.setOnClickListener { showDatePicker() }
         binding.dateInputLayout.setOnClickListener { showDatePicker() }
         binding.saveButton.setOnClickListener { saveLog() }
+        binding.deleteButton.isVisible = logId != NEW_LOG_ID
+        binding.deleteButton.setOnClickListener { confirmDelete() }
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -62,9 +65,11 @@ class LogDetailFragment : Fragment(R.layout.fragment_log_detail) {
     }
 
     private fun render(state: LogDetailUiState) {
-        val isBusy = state.isLoading || state.isSaving
+        val isBusy = state.isLoading || state.isSaving || state.isDeleting
         binding.loadingIndicator.isVisible = isBusy
         binding.saveButton.isEnabled = !isBusy
+        binding.deleteButton.isEnabled =
+            logId != NEW_LOG_ID && state.log != null && !isBusy
 
         if (!state.isLoading) {
             state.log?.let { log ->
@@ -79,10 +84,21 @@ class LogDetailFragment : Fragment(R.layout.fragment_log_detail) {
             Snackbar.make(binding.root, message, Snackbar.LENGTH_LONG).show()
         }
 
-        if (state.isSaved && !navigatedBack) {
+        if ((state.isSaved || state.isDeleted) && !navigatedBack) {
             navigatedBack = true
             findNavController().navigateUp()
         }
+    }
+
+    private fun confirmDelete() {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(R.string.delete_log_title)
+            .setMessage(R.string.delete_log_message)
+            .setNegativeButton(R.string.cancel, null)
+            .setPositiveButton(R.string.delete_confirm) { _, _ ->
+                viewModel.deleteLog()
+            }
+            .show()
     }
 
     private fun populateForm(log: MaintenanceLogEntity) {

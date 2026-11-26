@@ -78,6 +78,11 @@ class LogDetailViewModel @Inject constructor(
         }
     }
 
+    fun deleteLog() {
+        val log = _uiState.value.log ?: return
+        deleteLog(log)
+    }
+
     fun deleteLog(log: MaintenanceLogEntity) {
         viewModelScope.launch {
             _uiState.update {

@@ -116,6 +116,20 @@
             android:layout_marginTop="24dp"
             android:text="@string/save_log" />
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/deleteButton"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="@string/delete_log"
+            android:textColor="?attr/colorError"
+            android:visibility="gone"
+            app:icon="@drawable/ic_delete"
+            app:iconTint="?attr/colorError"
+            app:strokeColor="?attr/colorError"
+            tools:visibility="visible" />
+
         <com.google.android.material.progressindicator.CircularProgressIndicator
             android:id="@+id/loadingIndicator"
             android:layout_width="wrap_content"
