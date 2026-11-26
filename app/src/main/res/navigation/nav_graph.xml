@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/logListFragment">
+
+    <fragment
+        android:id="@+id/logListFragment"
+        android:name="com.example.maintenancelog.LogListFragment"
+        android:label="@string/log_list_title"
+        tools:layout="@layout/fragment_log_list">
+        <action
+            android:id="@+id/action_logListFragment_to_logDetailFragment"
+            app:destination="@id/logDetailFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/logDetailFragment"
+        android:name="com.example.maintenancelog.LogDetailFragment"
+        android:label="@string/log_detail_title"
+        tools:layout="@layout/fragment_log_detail" />
+
+</navigation>

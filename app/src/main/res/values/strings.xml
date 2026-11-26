@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">MaintenanceLog</string>
+    <string name="log_list_title">Maintenance Log</string>
+    <string name="log_list_subtitle">Log list</string>
+    <string name="open_log_detail">View log details</string>
+    <string name="log_detail_title">Log detail</string>
+    <string name="log_detail_subtitle">Details of the selected log entry</string>
+    <string name="back_to_log_list">Back to list</string>
 </resources>
