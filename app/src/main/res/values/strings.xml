@@ -8,4 +8,13 @@
     <string name="back_to_log_list">Back to list</string>
     <string name="empty_log_list">No maintenance logs yet. Tap + to add your first entry.</string>
     <string name="add_log">Add maintenance log</string>
+    <string name="log_title_label">Title</string>
+    <string name="log_description_label">Description</string>
+    <string name="log_category_label">Category</string>
+    <string name="log_date_label">Date</string>
+    <string name="log_cost_label">Price</string>
+    <string name="save_log">Save</string>
+    <string name="error_log_title_required">Title is required.</string>
+    <string name="error_log_category_required">Category is required.</string>
+    <string name="error_log_cost_invalid">Enter a valid price.</string>
 </resources>
