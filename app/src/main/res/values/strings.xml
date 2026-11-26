@@ -6,4 +6,6 @@
     <string name="log_detail_title">Log detail</string>
     <string name="log_detail_subtitle">Details of the selected log entry</string>
     <string name="back_to_log_list">Back to list</string>
+    <string name="empty_log_list">No maintenance logs yet. Tap + to add your first entry.</string>
+    <string name="add_log">Add maintenance log</string>
 </resources>

@@ -19,6 +19,11 @@
         android:id="@+id/logDetailFragment"
         android:name="com.example.maintenancelog.LogDetailFragment"
         android:label="@string/log_detail_title"
-        tools:layout="@layout/fragment_log_detail" />
+        tools:layout="@layout/fragment_log_detail">
+        <argument
+            android:name="logId"
+            android:defaultValue="0L"
+            app:argType="long" />
+    </fragment>
 
 </navigation>
