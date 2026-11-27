@@ -7,7 +7,10 @@
     <string name="log_detail_subtitle">Details of the selected log entry</string>
     <string name="back_to_log_list">Back to list</string>
     <string name="empty_log_list">No maintenance logs yet. Tap + to add your first entry.</string>
+    <string name="empty_filtered_log_list">No logs match your search or filter.</string>
     <string name="add_log">Add maintenance log</string>
+    <string name="search_logs">Search logs</string>
+    <string name="category_all">All</string>
     <string name="log_title_label">Title</string>
     <string name="log_description_label">Description</string>
     <string name="log_category_label">Category</string>

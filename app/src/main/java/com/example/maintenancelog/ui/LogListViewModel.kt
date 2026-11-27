@@ -23,12 +23,28 @@ class LogListViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(LogListUiState(isLoading = true))
     val uiState: StateFlow<LogListUiState> = _uiState.asStateFlow()
 
+    private val allLogs = MutableStateFlow<List<MaintenanceLogEntity>>(emptyList())
+
     init {
         repository.getAllLogs()
             .onEach { logs ->
-                _uiState.update {
-                    it.copy(logs = logs, isLoading = false, errorMessage = null)
+                allLogs.value = logs
+                val categories = logs
+                    .map { it.category }
+                    .distinctBy { it.lowercase() }
+                    .sortedBy { it.lowercase() }
+                _uiState.update { state ->
+                    val selectedCategory = state.selectedCategory?.takeIf { selected ->
+                        categories.any { it.equals(selected, ignoreCase = true) }
+                    }
+                    state.copy(
+                        categories = categories,
+                        selectedCategory = selectedCategory,
+                        isLoading = false,
+                        errorMessage = null
+                    )
                 }
+                applyFilters()
             }
             .catch { throwable ->
                 _uiState.update {
@@ -39,6 +55,31 @@ class LogListViewModel @Inject constructor(
                 }
             }
             .launchIn(viewModelScope)
+    }
+
+    fun updateSearchQuery(query: String) {
+        _uiState.update { it.copy(searchQuery = query) }
+        applyFilters()
+    }
+
+    fun selectCategory(category: String?) {
+        _uiState.update { it.copy(selectedCategory = category) }
+        applyFilters()
+    }
+
+    private fun applyFilters() {
+        val state = _uiState.value
+        val query = state.searchQuery.trim()
+        val category = state.selectedCategory
+        val filteredLogs = allLogs.value.filter { log ->
+            val matchesQuery = query.isEmpty() ||
+                log.title.contains(query, ignoreCase = true) ||
+                log.description.contains(query, ignoreCase = true)
+            val matchesCategory = category == null ||
+                log.category.equals(category, ignoreCase = true)
+            matchesQuery && matchesCategory
+        }
+        _uiState.update { it.copy(logs = filteredLogs) }
     }
 
     fun refreshLogs() {
