@@ -49,6 +49,10 @@ class LogDetailFragment : Fragment(R.layout.fragment_log_detail) {
 
         binding.dateEditText.setOnClickListener { showDatePicker() }
         binding.dateInputLayout.setOnClickListener { showDatePicker() }
+        binding.dateInputLayout.setEndIconOnClickListener { showDatePicker() }
+        binding.categoryEditText.setOnClickListener {
+            binding.categoryEditText.showDropDown()
+        }
         binding.saveButton.setOnClickListener { saveLog() }
         binding.deleteButton.isVisible = logId != NEW_LOG_ID
         binding.deleteButton.setOnClickListener { confirmDelete() }
@@ -70,6 +74,9 @@ class LogDetailFragment : Fragment(R.layout.fragment_log_detail) {
         binding.saveButton.isEnabled = !isBusy
         binding.deleteButton.isEnabled =
             logId != NEW_LOG_ID && state.log != null && !isBusy
+        binding.titleInputLayout.error = state.titleError
+        binding.categoryInputLayout.error = state.categoryError
+        binding.costInputLayout.error = state.costError
 
         if (!state.isLoading) {
             state.log?.let { log ->
@@ -122,20 +129,8 @@ class LogDetailFragment : Fragment(R.layout.fragment_log_detail) {
             ?.replace(',', '.')
             ?.toDoubleOrNull()
 
-        var isValid = true
-        if (title.isEmpty()) {
-            binding.titleInputLayout.error = getString(R.string.error_log_title_required)
-            isValid = false
-        }
-        if (category.isEmpty()) {
-            binding.categoryInputLayout.error = getString(R.string.error_log_category_required)
-            isValid = false
-        }
-        if (cost == null || cost < 0.0) {
+        if (cost == null) {
             binding.costInputLayout.error = getString(R.string.error_log_cost_invalid)
-            isValid = false
-        }
-        if (!isValid) {
             return
         }
 
@@ -146,7 +141,7 @@ class LogDetailFragment : Fragment(R.layout.fragment_log_detail) {
                 description = description,
                 category = category,
                 date = selectedDateMillis,
-                cost = cost ?: return
+                cost = cost
             )
         )
     }

@@ -63,12 +63,13 @@
             android:layout_marginTop="12dp"
             android:hint="@string/log_category_label">
 
-            <com.google.android.material.textfield.TextInputEditText
+            <com.google.android.material.textfield.MaterialAutoCompleteTextView
                 android:id="@+id/categoryEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textCapSentences"
-                android:maxLines="1" />
+                android:maxLines="1"
+                app:simpleItems="@array/common_categories" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -78,7 +79,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:hint="@string/log_date_label">
+            android:hint="@string/log_date_label"
+            app:endIconDrawable="@drawable/ic_calendar"
+            app:endIconMode="custom">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/dateEditText"

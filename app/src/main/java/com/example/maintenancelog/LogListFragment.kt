@@ -19,6 +19,7 @@ import com.example.maintenancelog.ui.LogListViewModel
 import com.google.android.material.chip.Chip
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import java.text.NumberFormat
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -29,6 +30,7 @@ class LogListFragment : Fragment(R.layout.fragment_log_list) {
 
     private val viewModel: LogListViewModel by viewModels()
     private val logAdapter = LogListAdapter { log -> navigateToLogDetail(log.id) }
+    private val currencyFormat: NumberFormat = NumberFormat.getCurrencyInstance()
 
     private var renderedCategories: List<String>? = null
 
@@ -62,6 +64,18 @@ class LogListFragment : Fragment(R.layout.fragment_log_list) {
         binding.loadingIndicator.isVisible = state.isLoading
         binding.swipeRefreshLayout.isRefreshing = state.isSyncing
         binding.swipeRefreshLayout.isEnabled = !state.isLoading
+        val logCount = state.logs.size
+        val entries = resources.getQuantityString(
+            R.plurals.log_summary_entries,
+            logCount,
+            logCount
+        )
+        binding.logSummaryText.text = getString(
+            R.string.log_summary_format,
+            entries,
+            currencyFormat.format(state.totalCost)
+        )
+        binding.logSummaryText.isVisible = !state.isLoading
         binding.emptyStateText.setText(
             if (state.searchQuery.isNotBlank() || state.selectedCategory != null) {
                 R.string.empty_filtered_log_list

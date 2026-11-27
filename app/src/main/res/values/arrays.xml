@@ -1,0 +1,11 @@
+<resources>
+    <string-array name="common_categories">
+        <item>Engine</item>
+        <item>Oil</item>
+        <item>Tires</item>
+        <item>Brakes</item>
+        <item>Filters</item>
+        <item>Inspection</item>
+        <item>Other</item>
+    </string-array>
+</resources>

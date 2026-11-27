@@ -79,7 +79,12 @@ class LogListViewModel @Inject constructor(
                 log.category.equals(category, ignoreCase = true)
             matchesQuery && matchesCategory
         }
-        _uiState.update { it.copy(logs = filteredLogs) }
+        _uiState.update {
+            it.copy(
+                logs = filteredLogs,
+                totalCost = filteredLogs.sumOf { log -> log.cost }
+            )
+        }
     }
 
     fun refreshLogs() {

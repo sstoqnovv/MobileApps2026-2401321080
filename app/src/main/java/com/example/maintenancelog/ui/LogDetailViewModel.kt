@@ -27,6 +27,9 @@ class LogDetailViewModel @Inject constructor(
                     isLoading = true,
                     isSaved = false,
                     isDeleted = false,
+                    titleError = null,
+                    categoryError = null,
+                    costError = null,
                     errorMessage = null
                 )
             }
@@ -52,16 +55,47 @@ class LogDetailViewModel @Inject constructor(
     }
 
     fun saveLog(log: MaintenanceLogEntity) {
+        val titleError = if (log.title.isBlank()) TITLE_REQUIRED else null
+        val categoryError = if (log.category.isBlank()) CATEGORY_REQUIRED else null
+        val costError = if (!log.cost.isFinite() || log.cost < 0.0) COST_INVALID else null
+
+        if (titleError != null || categoryError != null || costError != null) {
+            _uiState.update {
+                it.copy(
+                    titleError = titleError,
+                    categoryError = categoryError,
+                    costError = costError,
+                    isSaved = false,
+                    errorMessage = null
+                )
+            }
+            return
+        }
+
+        val logToSave = log.copy(
+            title = log.title.trim(),
+            description = log.description.trim(),
+            category = log.category.trim(),
+            date = if (log.date > 0L) log.date else System.currentTimeMillis()
+        )
+
         viewModelScope.launch {
             _uiState.update {
-                it.copy(isSaving = true, isSaved = false, errorMessage = null)
+                it.copy(
+                    isSaving = true,
+                    isSaved = false,
+                    titleError = null,
+                    categoryError = null,
+                    costError = null,
+                    errorMessage = null
+                )
             }
             runCatching {
-                if (log.id == 0L) {
-                    log.copy(id = repository.insertLog(log))
+                if (logToSave.id == 0L) {
+                    logToSave.copy(id = repository.insertLog(logToSave))
                 } else {
-                    repository.updateLog(log)
-                    log
+                    repository.updateLog(logToSave)
+                    logToSave
                 }
             }.onSuccess { savedLog ->
                 _uiState.update {
@@ -140,5 +174,8 @@ class LogDetailViewModel @Inject constructor(
         const val NOT_FOUND_ERROR = "Maintenance log not found."
         const val SAVE_ERROR = "Failed to save the maintenance log."
         const val DELETE_ERROR = "Failed to delete the maintenance log."
+        const val TITLE_REQUIRED = "Title is required."
+        const val CATEGORY_REQUIRED = "Category is required."
+        const val COST_INVALID = "Price must be a non-negative number."
     }
 }

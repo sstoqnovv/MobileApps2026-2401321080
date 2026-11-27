@@ -9,5 +9,8 @@ data class LogDetailUiState(
     val isDeleting: Boolean = false,
     val isSaved: Boolean = false,
     val isDeleted: Boolean = false,
+    val titleError: String? = null,
+    val categoryError: String? = null,
+    val costError: String? = null,
     val errorMessage: String? = null
 )
