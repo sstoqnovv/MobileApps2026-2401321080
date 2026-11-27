@@ -20,6 +20,9 @@ interface MaintenanceLogDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(log: MaintenanceLogEntity): Long
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(logs: List<MaintenanceLogEntity>)
+
     @Update
     suspend fun update(log: MaintenanceLogEntity)
 

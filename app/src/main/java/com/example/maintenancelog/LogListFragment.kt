@@ -36,6 +36,10 @@ class LogListFragment : Fragment(R.layout.fragment_log_list) {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = logAdapter
         }
+        binding.swipeRefreshLayout.setOnRefreshListener { viewModel.refreshLogs() }
+        binding.swipeRefreshLayout.setOnChildScrollUpCallback { _, _ ->
+            binding.logRecyclerView.canScrollVertically(-1)
+        }
         binding.addLogFab.setOnClickListener { navigateToLogDetail(0L) }
 
         viewLifecycleOwner.lifecycleScope.launch {
@@ -47,6 +51,8 @@ class LogListFragment : Fragment(R.layout.fragment_log_list) {
 
     private fun render(state: LogListUiState) {
         binding.loadingIndicator.isVisible = state.isLoading
+        binding.swipeRefreshLayout.isRefreshing = state.isSyncing
+        binding.swipeRefreshLayout.isEnabled = !state.isLoading
         binding.emptyStateText.isVisible = !state.isLoading && state.logs.isEmpty()
         binding.logRecyclerView.isVisible = state.logs.isNotEmpty()
         logAdapter.submitList(state.logs)

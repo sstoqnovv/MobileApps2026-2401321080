@@ -16,4 +16,6 @@ interface MaintenanceRepository {
     suspend fun deleteLog(log: MaintenanceLogEntity)
 
     suspend fun deleteLogById(id: Long)
+
+    suspend fun refreshLogs(): Result<Unit>
 }

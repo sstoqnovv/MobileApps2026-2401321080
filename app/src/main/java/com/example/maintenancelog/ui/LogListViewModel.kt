@@ -41,6 +41,29 @@ class LogListViewModel @Inject constructor(
             .launchIn(viewModelScope)
     }
 
+    fun refreshLogs() {
+        if (_uiState.value.isSyncing) {
+            return
+        }
+        viewModelScope.launch {
+            _uiState.update {
+                it.copy(isSyncing = true, errorMessage = null)
+            }
+            repository.refreshLogs()
+                .onSuccess {
+                    _uiState.update { it.copy(isSyncing = false) }
+                }
+                .onFailure { throwable ->
+                    _uiState.update {
+                        it.copy(
+                            isSyncing = false,
+                            errorMessage = throwable.message ?: SYNC_ERROR
+                        )
+                    }
+                }
+        }
+    }
+
     fun deleteLog(log: MaintenanceLogEntity) {
         viewModelScope.launch {
             runCatching { repository.deleteLog(log) }
@@ -65,6 +88,7 @@ class LogListViewModel @Inject constructor(
 
     private companion object {
         const val LOAD_ERROR = "Failed to load maintenance logs."
+        const val SYNC_ERROR = "Failed to sync maintenance logs."
         const val DELETE_ERROR = "Failed to delete the maintenance log."
     }
 }
