@@ -15,6 +15,7 @@ MaintenanceLog is a small Android application for keeping a personal log of vehi
 - **Form validation** - title and category are required, the cost must be a valid non-negative number, and input is trimmed before saving. The date defaults to today when left empty.
 - **MaterialDatePicker** - the date field opens a Material 3 date picker; the selected date is stored as local midnight in epoch milliseconds.
 - **Cost summary** - a dedicated summary card shows the number of currently visible entries and their total cost, formatted with the device locale and currency.
+- **CSV export and sharing** - a toolbar action exports the currently visible (filtered) entries to a UTF-8 CSV file in the app cache and opens the system share sheet. The file contains an Excel-friendly BOM, `ID`, `Title`, `Category`, `Date`, `Cost` and `Description` columns with proper escaping and a final summary row with the entry count and total cost. Files are shared securely through `FileProvider` (Android 7+).
 - **Category badges** - each list entry displays a category-specific vector icon on a tinted circular badge, making entries easier to scan.
 - **Light and Dark theme** - Material 3 `DayNight` theme with separate light and dark palettes. A toolbar button in the log list switches between light and dark mode, and the choice is stored in `SharedPreferences` and restored on the next launch. Without a saved choice, the app follows the system theme.
 - **Empty and error states** - dedicated messages for an empty database, an empty filtered result and synchronization failures.
@@ -22,7 +23,7 @@ MaintenanceLog is a small Android application for keeping a personal log of vehi
 ## Screens
 
 1. **Maintenance Log list** (`LogListFragment`)
-   - Toolbar with a light/dark theme toggle.
+   - Toolbar with a CSV export action and a light/dark theme toggle.
    - Search field, category filter chips and a summary card with the entry count and total cost.
    - RecyclerView with all entries ordered by date (newest first); each row has a category icon and color badge.
    - Pull-to-refresh for remote synchronization.
@@ -157,7 +158,8 @@ These tests use `kotlinx-coroutines-test`, `MainDispatcherRule` and in-memory fa
 
 - list loading, summary calculation, text search, category filtering and sync failures (`LogListViewModelTest`);
 - validation, create/update/load/delete flows (`LogDetailViewModelTest`);
-- Room/remote repository behavior and refresh error handling (`MaintenanceLogRepositoryTest`).
+- Room/remote repository behavior and refresh error handling (`MaintenanceLogRepositoryTest`);
+- CSV formatting, escaping, empty exports and summary totals (`MaintenanceLogCsvExporterTest`).
 
 An HTML report is available at `app/build/reports/tests/testDebugUnitTest/index.html`.
 

@@ -1,11 +1,14 @@
 package com.example.maintenancelog
 
+import android.content.ClipData
+import android.content.Intent
 import android.content.res.ColorStateList
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import androidx.core.os.bundleOf
 import androidx.core.view.MenuItemCompat
 import androidx.core.view.isVisible
@@ -22,11 +25,15 @@ import com.example.maintenancelog.databinding.FragmentLogListBinding
 import com.example.maintenancelog.ui.LogListAdapter
 import com.example.maintenancelog.ui.LogListUiState
 import com.example.maintenancelog.ui.LogListViewModel
+import com.example.maintenancelog.ui.MaintenanceLogCsvExporter
 import com.google.android.material.chip.Chip
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import java.io.File
 import java.text.NumberFormat
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
 class LogListFragment : Fragment(R.layout.fragment_log_list) {
@@ -49,11 +56,18 @@ class LogListFragment : Fragment(R.layout.fragment_log_list) {
         renderedCategories = null
         binding.toolbar.inflateMenu(R.menu.menu_log_list)
         binding.toolbar.setOnMenuItemClickListener { item ->
-            if (item.itemId == R.id.action_toggle_theme) {
-                toggleTheme()
-                true
-            } else {
-                false
+            when (item.itemId) {
+                R.id.action_toggle_theme -> {
+                    toggleTheme()
+                    true
+                }
+
+                R.id.action_export -> {
+                    exportVisibleLogs()
+                    true
+                }
+
+                else -> false
             }
         }
         updateThemeToggleIcon()
@@ -166,18 +180,70 @@ class LogListFragment : Fragment(R.layout.fragment_log_list) {
 
     private fun updateThemeToggleIcon() {
         val isDark = isDarkMode()
+        val iconTint = ColorStateList.valueOf(
+            ContextCompat.getColor(requireContext(), R.color.m3_on_surface)
+        )
         binding.toolbar.menu.findItem(R.id.action_toggle_theme)?.apply {
             setIcon(if (isDark) R.drawable.ic_theme_light else R.drawable.ic_theme_dark)
             title = getString(
                 if (isDark) R.string.switch_to_light_theme else R.string.switch_to_dark_theme
             )
-            MenuItemCompat.setIconTintList(
-                this,
-                ColorStateList.valueOf(
-                    ContextCompat.getColor(requireContext(), R.color.m3_on_surface)
-                )
-            )
+            MenuItemCompat.setIconTintList(this, iconTint)
         }
+        binding.toolbar.menu.findItem(R.id.action_export)?.let { item ->
+            MenuItemCompat.setIconTintList(item, iconTint)
+        }
+    }
+
+    private fun exportVisibleLogs() {
+        val logs = viewModel.uiState.value.logs
+        if (logs.isEmpty()) {
+            Snackbar.make(
+                binding.root,
+                R.string.export_no_logs,
+                Snackbar.LENGTH_SHORT
+            ).show()
+            return
+        }
+        val context = requireContext().applicationContext
+        viewLifecycleOwner.lifecycleScope.launch {
+            runCatching {
+                withContext(Dispatchers.IO) {
+                    MaintenanceLogCsvExporter.exportToCache(context, logs)
+                }
+            }.onSuccess { file ->
+                if (isAdded) {
+                    shareCsv(file)
+                }
+            }.onFailure {
+                if (isAdded) {
+                    Snackbar.make(
+                        binding.root,
+                        R.string.export_failed,
+                        Snackbar.LENGTH_LONG
+                    ).show()
+                }
+            }
+        }
+    }
+
+    private fun shareCsv(file: File) {
+        val uri = FileProvider.getUriForFile(
+            requireContext(),
+            "${requireContext().packageName}.fileprovider",
+            file
+        )
+        val subject = getString(R.string.export_share_subject)
+        val shareIntent = Intent(Intent.ACTION_SEND).apply {
+            type = "text/csv"
+            putExtra(Intent.EXTRA_STREAM, uri)
+            putExtra(Intent.EXTRA_SUBJECT, subject)
+            clipData = ClipData.newRawUri(subject, uri)
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        }
+        startActivity(
+            Intent.createChooser(shareIntent, getString(R.string.export_share_title))
+        )
     }
 
     private fun isDarkMode(): Boolean =
