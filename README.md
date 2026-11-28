@@ -15,7 +15,7 @@ MaintenanceLog is a small Android application for keeping a personal log of vehi
 - **Form validation** - title and category are required, the cost must be a valid non-negative number, and input is trimmed before saving. The date defaults to today when left empty.
 - **MaterialDatePicker** - the date field opens a Material 3 date picker; the selected date is stored as local midnight in epoch milliseconds.
 - **Cost summary** - a dedicated summary card shows the number of currently visible entries and their total cost, formatted with the device locale and currency.
-- **CSV export and sharing** - a toolbar action exports the currently visible (filtered) entries to a UTF-8 CSV file in the app cache and opens the system share sheet. The file contains an Excel-friendly BOM, `ID`, `Title`, `Category`, `Date`, `Cost` and `Description` columns with proper escaping and a final summary row with the entry count and total cost. Files are shared securely through `FileProvider` (Android 7+).
+- **CSV export and share** - exports the currently visible maintenance entries to a UTF-8 CSV file (with a summary total row) in app cache and shares it via `FileProvider` and the Android share sheet.
 - **Category badges** - each list entry displays a category-specific vector icon on a tinted circular badge, making entries easier to scan.
 - **Light and Dark theme** - Material 3 `DayNight` theme with separate light and dark palettes. A toolbar button in the log list switches between light and dark mode, and the choice is stored in `SharedPreferences` and restored on the next launch. Without a saved choice, the app follows the system theme.
 - **Empty and error states** - dedicated messages for an empty database, an empty filtered result and synchronization failures.
