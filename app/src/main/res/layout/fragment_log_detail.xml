@@ -69,6 +69,7 @@
                 android:layout_height="wrap_content"
                 android:inputType="textCapSentences"
                 android:maxLines="1"
+                android:minHeight="48dp"
                 app:simpleItems="@array/common_categories" />
 
         </com.google.android.material.textfield.TextInputLayout>

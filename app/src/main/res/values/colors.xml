@@ -2,35 +2,35 @@
 <resources>
     <!-- Material 3 color scheme - light theme. Dark theme values are in values-night/colors.xml. -->
 
-    <!-- Primary -->
-    <color name="m3_primary">#00639B</color>
+    <!-- Primary: deep teal -->
+    <color name="m3_primary">#006B5F</color>
     <color name="m3_on_primary">#FFFFFF</color>
-    <color name="m3_primary_container">#CDE5FF</color>
-    <color name="m3_on_primary_container">#001D33</color>
-    <color name="m3_primary_fixed">#CDE5FF</color>
-    <color name="m3_primary_fixed_dim">#96CCFF</color>
-    <color name="m3_on_primary_fixed">#001D33</color>
-    <color name="m3_on_primary_fixed_variant">#004A76</color>
+    <color name="m3_primary_container">#A7F2E4</color>
+    <color name="m3_on_primary_container">#00201C</color>
+    <color name="m3_primary_fixed">#A7F2E4</color>
+    <color name="m3_primary_fixed_dim">#82D5C8</color>
+    <color name="m3_on_primary_fixed">#00201C</color>
+    <color name="m3_on_primary_fixed_variant">#005047</color>
 
-    <!-- Secondary -->
-    <color name="m3_secondary">#50606F</color>
+    <!-- Secondary: muted teal -->
+    <color name="m3_secondary">#4A635F</color>
     <color name="m3_on_secondary">#FFFFFF</color>
-    <color name="m3_secondary_container">#D3E5F5</color>
-    <color name="m3_on_secondary_container">#0C1D29</color>
-    <color name="m3_secondary_fixed">#D3E5F5</color>
-    <color name="m3_secondary_fixed_dim">#B7C8DA</color>
-    <color name="m3_on_secondary_fixed">#0C1D29</color>
-    <color name="m3_on_secondary_fixed_variant">#394857</color>
+    <color name="m3_secondary_container">#CCE8E2</color>
+    <color name="m3_on_secondary_container">#06201C</color>
+    <color name="m3_secondary_fixed">#CCE8E2</color>
+    <color name="m3_secondary_fixed_dim">#B1CCC6</color>
+    <color name="m3_on_secondary_fixed">#06201C</color>
+    <color name="m3_on_secondary_fixed_variant">#324B47</color>
 
-    <!-- Tertiary -->
-    <color name="m3_tertiary">#3C6470</color>
+    <!-- Tertiary: warm amber accent -->
+    <color name="m3_tertiary">#8A5100</color>
     <color name="m3_on_tertiary">#FFFFFF</color>
-    <color name="m3_tertiary_container">#C0E8F5</color>
-    <color name="m3_on_tertiary_container">#001F26</color>
-    <color name="m3_tertiary_fixed">#C0E8F5</color>
-    <color name="m3_tertiary_fixed_dim">#A4CDD9</color>
-    <color name="m3_on_tertiary_fixed">#001F26</color>
-    <color name="m3_on_tertiary_fixed_variant">#244C56</color>
+    <color name="m3_tertiary_container">#FFDCB0</color>
+    <color name="m3_on_tertiary_container">#2C1600</color>
+    <color name="m3_tertiary_fixed">#FFDCB0</color>
+    <color name="m3_tertiary_fixed_dim">#FFB95C</color>
+    <color name="m3_on_tertiary_fixed">#2C1600</color>
+    <color name="m3_on_tertiary_fixed_variant">#653E00</color>
 
     <!-- Error -->
     <color name="m3_error">#BA1A1A</color>
@@ -39,26 +39,42 @@
     <color name="m3_on_error_container">#410002</color>
 
     <!-- Background / Surface -->
-    <color name="m3_background">#FCFCFF</color>
-    <color name="m3_on_background">#1A1C1E</color>
-    <color name="m3_surface">#FCFCFF</color>
-    <color name="m3_on_surface">#1A1C1E</color>
-    <color name="m3_surface_variant">#DEE3EB</color>
-    <color name="m3_on_surface_variant">#42474E</color>
-    <color name="m3_surface_dim">#DBD9DE</color>
-    <color name="m3_surface_bright">#FCFCFF</color>
+    <color name="m3_background">#F6FAF7</color>
+    <color name="m3_on_background">#171D1B</color>
+    <color name="m3_surface">#F6FAF7</color>
+    <color name="m3_on_surface">#171D1B</color>
+    <color name="m3_surface_variant">#DAE5E0</color>
+    <color name="m3_on_surface_variant">#3F4946</color>
+    <color name="m3_surface_dim">#D6E0DB</color>
+    <color name="m3_surface_bright">#F6FAF7</color>
     <color name="m3_surface_container_lowest">#FFFFFF</color>
-    <color name="m3_surface_container_low">#F6F6FA</color>
-    <color name="m3_surface_container">#F0F0F4</color>
-    <color name="m3_surface_container_high">#EAEAEE</color>
-    <color name="m3_surface_container_highest">#E4E3E8</color>
-    <color name="m3_surface_inverse">#2F3033</color>
-    <color name="m3_on_surface_inverse">#F1F0F4</color>
+    <color name="m3_surface_container_low">#F0F6F2</color>
+    <color name="m3_surface_container">#EAF1ED</color>
+    <color name="m3_surface_container_high">#E4ECE8</color>
+    <color name="m3_surface_container_highest">#DEE8E3</color>
+    <color name="m3_surface_inverse">#2B312F</color>
+    <color name="m3_on_surface_inverse">#EDF2EF</color>
 
     <!-- Outline -->
-    <color name="m3_outline">#72777F</color>
-    <color name="m3_outline_variant">#C2C7CF</color>
+    <color name="m3_outline">#6F7975</color>
+    <color name="m3_outline_variant">#BEC9C4</color>
 
     <!-- Inverse primary -->
-    <color name="m3_primary_inverse">#96CCFF</color>
+    <color name="m3_primary_inverse">#4FDCC8</color>
+
+    <!-- Category badges -->
+    <color name="category_engine_container">#A7F2E4</color>
+    <color name="category_engine_content">#00201C</color>
+    <color name="category_oil_container">#FFDCB0</color>
+    <color name="category_oil_content">#2C1600</color>
+    <color name="category_tires_container">#CFE6F2</color>
+    <color name="category_tires_content">#0E2A38</color>
+    <color name="category_brakes_container">#FFDAD6</color>
+    <color name="category_brakes_content">#410002</color>
+    <color name="category_filters_container">#D6F5C9</color>
+    <color name="category_filters_content">#102A08</color>
+    <color name="category_inspection_container">#E9DDFF</color>
+    <color name="category_inspection_content">#21005D</color>
+    <color name="category_other_container">#E1E8E5</color>
+    <color name="category_other_content">#1B211F</color>
 </resources>

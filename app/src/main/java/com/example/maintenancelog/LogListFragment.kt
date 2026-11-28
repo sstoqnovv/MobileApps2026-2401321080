@@ -1,8 +1,13 @@
 package com.example.maintenancelog
 
+import android.content.res.ColorStateList
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
+import androidx.core.view.MenuItemCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
@@ -12,6 +17,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.maintenancelog.data.preferences.ThemePreferences
 import com.example.maintenancelog.databinding.FragmentLogListBinding
 import com.example.maintenancelog.ui.LogListAdapter
 import com.example.maintenancelog.ui.LogListUiState
@@ -32,13 +38,25 @@ class LogListFragment : Fragment(R.layout.fragment_log_list) {
     private val logAdapter = LogListAdapter { log -> navigateToLogDetail(log.id) }
     private val currencyFormat: NumberFormat = NumberFormat.getCurrencyInstance()
 
+    private lateinit var themePreferences: ThemePreferences
     private var renderedCategories: List<String>? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentLogListBinding.bind(view)
+        themePreferences = ThemePreferences(requireContext())
 
         renderedCategories = null
+        binding.toolbar.inflateMenu(R.menu.menu_log_list)
+        binding.toolbar.setOnMenuItemClickListener { item ->
+            if (item.itemId == R.id.action_toggle_theme) {
+                toggleTheme()
+                true
+            } else {
+                false
+            }
+        }
+        updateThemeToggleIcon()
         binding.logRecyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = logAdapter
@@ -70,20 +88,25 @@ class LogListFragment : Fragment(R.layout.fragment_log_list) {
             logCount,
             logCount
         )
-        binding.logSummaryText.text = getString(
-            R.string.log_summary_format,
-            entries,
-            currencyFormat.format(state.totalCost)
+        binding.logSummaryCount.text = entries
+        binding.logSummaryTotal.text = currencyFormat.format(state.totalCost)
+        binding.summaryCard.isVisible = !state.isLoading
+        val hasActiveFilters = state.searchQuery.isNotBlank() || state.selectedCategory != null
+        binding.emptyStateTitle.setText(
+            if (hasActiveFilters) {
+                R.string.empty_state_title_filtered
+            } else {
+                R.string.empty_state_title_default
+            }
         )
-        binding.logSummaryText.isVisible = !state.isLoading
         binding.emptyStateText.setText(
-            if (state.searchQuery.isNotBlank() || state.selectedCategory != null) {
+            if (hasActiveFilters) {
                 R.string.empty_filtered_log_list
             } else {
                 R.string.empty_log_list
             }
         )
-        binding.emptyStateText.isVisible = !state.isLoading && state.logs.isEmpty()
+        binding.emptyStateContainer.isVisible = !state.isLoading && state.logs.isEmpty()
         binding.logRecyclerView.isVisible = state.logs.isNotEmpty()
         logAdapter.submitList(state.logs)
         renderCategoryChips(state)
@@ -128,6 +151,38 @@ class LogListFragment : Fragment(R.layout.fragment_log_list) {
             bundleOf("logId" to logId)
         )
     }
+
+    private fun toggleTheme() {
+        val useDarkTheme = !isDarkMode()
+        themePreferences.saveDarkMode(useDarkTheme)
+        AppCompatDelegate.setDefaultNightMode(
+            if (useDarkTheme) {
+                AppCompatDelegate.MODE_NIGHT_YES
+            } else {
+                AppCompatDelegate.MODE_NIGHT_NO
+            }
+        )
+    }
+
+    private fun updateThemeToggleIcon() {
+        val isDark = isDarkMode()
+        binding.toolbar.menu.findItem(R.id.action_toggle_theme)?.apply {
+            setIcon(if (isDark) R.drawable.ic_theme_light else R.drawable.ic_theme_dark)
+            title = getString(
+                if (isDark) R.string.switch_to_light_theme else R.string.switch_to_dark_theme
+            )
+            MenuItemCompat.setIconTintList(
+                this,
+                ColorStateList.valueOf(
+                    ContextCompat.getColor(requireContext(), R.color.m3_on_surface)
+                )
+            )
+        }
+    }
+
+    private fun isDarkMode(): Boolean =
+        (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
+            Configuration.UI_MODE_NIGHT_YES
 
     override fun onDestroyView() {
         super.onDestroyView()

@@ -14,17 +14,20 @@ MaintenanceLog is a small Android application for keeping a personal log of vehi
 - **Search and filtering** - case-insensitive search over the title and description, combined with category filter chips. The category list is derived from the stored entries.
 - **Form validation** - title and category are required, the cost must be a valid non-negative number, and input is trimmed before saving. The date defaults to today when left empty.
 - **MaterialDatePicker** - the date field opens a Material 3 date picker; the selected date is stored as local midnight in epoch milliseconds.
-- **Cost summary** - the list header shows the number of currently visible entries and their total cost, formatted with the device locale and currency.
-- **Light and Dark theme** - Material 3 `DayNight` theme with separate light and dark color palettes. The app follows the system theme automatically.
+- **Cost summary** - a dedicated summary card shows the number of currently visible entries and their total cost, formatted with the device locale and currency.
+- **Category badges** - each list entry displays a category-specific vector icon on a tinted circular badge, making entries easier to scan.
+- **Light and Dark theme** - Material 3 `DayNight` theme with separate light and dark palettes. A toolbar button in the log list switches between light and dark mode, and the choice is stored in `SharedPreferences` and restored on the next launch. Without a saved choice, the app follows the system theme.
 - **Empty and error states** - dedicated messages for an empty database, an empty filtered result and synchronization failures.
 
 ## Screens
 
 1. **Maintenance Log list** (`LogListFragment`)
-   - Search field, category filter chips and a summary row.
-   - RecyclerView with all entries ordered by date (newest first).
+   - Toolbar with a light/dark theme toggle.
+   - Search field, category filter chips and a summary card with the entry count and total cost.
+   - RecyclerView with all entries ordered by date (newest first); each row has a category icon and color badge.
    - Pull-to-refresh for remote synchronization.
    - Floating action button for adding a new entry.
+   - Centered empty state with an icon, title and explanation for an empty database or empty filter results.
 2. **Log detail** (`LogDetailFragment`)
    - Add or edit an entry: title, description, category, date and cost.
    - Category autocomplete with common values (`Engine`, `Oil`, `Tires`, `Brakes`, `Filters`, `Inspection`, `Other`); free text is also accepted.
@@ -102,6 +105,7 @@ app/src/main/java/com/example/maintenancelog/
 ├── LogDetailFragment.kt
 ├── data/
 │   ├── local/        # Room entity, DAO and AppDatabase
+│   ├── preferences/  # Persisted theme preference
 │   ├── remote/       # Retrofit service, DTO and mappers
 │   └── repository/   # Repository contract and implementation
 ├── di/               # Hilt modules
