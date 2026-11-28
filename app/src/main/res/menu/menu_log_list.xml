@@ -6,7 +6,7 @@
         android:id="@+id/action_export"
         android:icon="@drawable/ic_export"
         android:title="@string/export_csv"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
 
     <item
         android:id="@+id/action_toggle_theme"
